@@ -1,0 +1,17 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\JTool\Editor\Components\ListenerComponent.cs">
+    <Files>
+      <File FileName="Assets\JTool\JListen\ListenerLibrary\PositionListener.cs" Line="32" Column="2" />
+      <File FileName="Assets\JTool\JListen\ListenerLibrary\BaseListener.cs" Line="8" Column="2" />
+      <File FileName="Assets\JTool\Editor\Components\ListenerComponent.cs" Line="55" Column="1" />
+      <File FileName="Assets\JTool\Editor\Windows\EventEditorWindow.cs" Line="156" Column="1" />
+      <File FileName="Assets\JTool\Editor\Components\EventComponent.cs" Line="1" Column="1" />
+      <File FileName="Assets\JTool\Editor\Components\BaseComponent.cs" Line="10" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
