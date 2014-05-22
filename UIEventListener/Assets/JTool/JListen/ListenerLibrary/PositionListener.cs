@@ -26,7 +26,7 @@ public class PositionListener : BaseListener {
 	{
 		target = EditorGUI.ObjectField(new Rect(5,5,90,20), target, typeof(GameObject), true) as GameObject;
 		pos = EditorGUI.ObjectField(new Rect(5,25,90,20), pos, typeof(Transform), true) as Transform;
-		range = EditorGUI.FloatField(new Rect(5,45,90,20), "半徑範圍", range);
+		range = EditorGUI.FloatField(new Rect(5,45,90,20), "rad rng", range);
 	}
 }
 }

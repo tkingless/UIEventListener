@@ -6,33 +6,20 @@ using JTool.Editor.Windows;
 namespace JTool.Editor.Component
 {
 public class EventComponent : BaseComponent {
-
+	
+	//here to specify the size of rect and btn name, this level is tended to design the window appearance and loaded function
+	
 	public EventComponent(string Name, EventEditorWindow win):base(Name, win)
 	{
-		Body = new Rect(30,250,100,100);
+			SetWndType (WindowType.tEvent);
+			//here to specify the size of rect and btn name
+			Rect initWndSize = new Rect(30,250,100,100);
+			mWndRect = initWndSize;
 	}
 
 	public override void OnGUI(int i)
 	{
 		base.OnGUI(i);
-		
-		Name = GUI.TextArea(new Rect(5,20,90,20), Name);
-		
-		if(GUI.Button(new Rect(5, 45,45,20), "連"))
-		{
-			win.AttachWindow(this);
-		}
-		else if(GUI.Button(new Rect(50, 45,45,20), "斷"))
-		{
-			win.DettachWindow(this);
-		}
-		else if(GUI.Button(new Rect(5, 65,90,20), "刪"))
-		{
-			win.RemoveWindow(this);
-		}
-
-
-		GUI.DragWindow();
 	}
 }
 }

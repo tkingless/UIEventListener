@@ -7,48 +7,38 @@ using JTool.JListen.ListenerLibrary;
 
 namespace JTool.Editor.Component
 {
-public class ListenerComponent : BaseComponent {
-
-	BaseListener listener;
-
-	public ListenerComponent(string Name, EventEditorWindow win):base(Name, win)
-	{
-		Body = new Rect(30,200,100,120);
-	}
-
-	public override void OnGUI(int i)
-	{
-		base.OnGUI(i);
-
-		Name = GUI.TextArea(new Rect(5,20,90,20), Name);
-
-		if(GUI.Button(new Rect(5, 45,45,20), "連"))
+		public class ListenerComponent : BaseComponent
 		{
-			win.AttachWindow(this);
-		}
-		else if(GUI.Button(new Rect(50, 45,45,20), "斷"))
-		{
-			win.DettachWindow(this);
-		}
-		else if(GUI.Button(new Rect(5, 65,90,20), "刪"))
-		{
-			win.RemoveWindow(this);
-		}
 
-		listener = EditorGUI.ObjectField(new Rect(5,85,90,20), listener, typeof(MonoScript), false) as BaseListener;
+				BaseListener mListener;
 
+				//here to specify the size of rect and btn name, this level is tended to design the window appearance and loaded function
+
+				public ListenerComponent (string Name, EventEditorWindow win):base(Name, win)
+				{
+						SetWndType (WindowType.tListner);
+						Rect initWndSize = new Rect (30, 200, 100, 120);
+						mWndRect = initWndSize;
+				}
+
+				public override void OnGUI (int i)
+				{
+						base.OnGUI (i);
+
+						Rect listenerRect = new Rect (5, 85, 90, 20);
+
+						mListener = EditorGUI.ObjectField (listenerRect, mListener, typeof(MonoScript), false) as BaseListener;
 		
-		System.Type tt = System.Type.GetType("JTool.JListen.ListenerLibrary.PositionListener");
-		Debug.Log(tt);
+						System.Type tt = System.Type.GetType ("JTool.JListen.ListenerLibrary.PositionListener");
+		
+						//Debug.Log(tt);
 //		System.Type tt = .GetType("JTool.JListen.ListenerLibrary.PositionListener");
 //		System.Object obj = Assembly.GetExecutingAssembly().GetType("PositionListener");
 
 //		Debug.Log(tt);
 
-		if(listener != null)
-			listener.OnGUI();
-
-		GUI.DragWindow();
-	}
-}
+						if (mListener != null)
+								mListener.OnGUI ();
+				}
+		}
 }

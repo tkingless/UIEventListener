@@ -13,15 +13,15 @@ public class EventEditorWindow : EditorWindow {
 	List<BaseComponent> windowsToAttach = new List<BaseComponent>();
 	List<BaseComponent> windowsToDettach = new List<BaseComponent>();
 	List<BaseComponent> attachedWindows = new List<BaseComponent>();
-
-	[MenuItem("Window/事件編輯器")]
+	
+	[MenuItem("JUI/Event Listener Editor")]
 	static void ShowEditor() 
 	{
 		EventEditorWindow editor = EditorWindow.GetWindow<EventEditorWindow>();
 	}
 	
 	void OnGUI() {
-		scrollPos = GUI.BeginScrollView(new Rect (0, 100, position.width, position.height-100), scrollPos, new Rect (0, 100, 2000 * zoomScale, 1500 * zoomScale),true, true);
+		scrollPos = GUI.BeginScrollView(new Rect (0, 100, position.width, position.height-100), scrollPos, new Rect (0, 100, 512 * zoomScale, 512 * zoomScale),false, false);
 
 		#region Resize by using GUI matrix
 		Matrix4x4 before = GUI.matrix;
@@ -33,7 +33,7 @@ public class EventEditorWindow : EditorWindow {
 		if (attachedWindows.Count >= 2)
 		{
 			for (int i = 0; i < attachedWindows.Count; i += 2)
-				DrawNodeCurve(attachedWindows[i].Body, attachedWindows[i + 1].Body);
+				DrawNodeCurve(attachedWindows[i].mWndRect, attachedWindows[i + 1].mWndRect);
 		}
 		foreach(BaseComponent wta in windowsToAttach)
 			wta.Attaching();
@@ -45,7 +45,7 @@ public class EventEditorWindow : EditorWindow {
 
 		for( int i = 0; i < windows.Count; i++)
 		{
-			windows[i].Body = GUI.Window(i, windows[i].Body, windows[i].OnGUI, windows[i].Name);
+			windows[i].mWndRect = GUI.Window(i, windows[i].mWndRect, windows[i].OnGUI, windows[i].mWndTitleName);
 		}
 		
 		EndWindows();
@@ -61,20 +61,26 @@ public class EventEditorWindow : EditorWindow {
 	}
 
 	// Draw the Control GUI here
+		private static readonly string newListenerBtn = "New Listener";
+		private static readonly string newEventBtn = "New Event";
+		//layout design
+		Rect newEventRect = new Rect(210,10,180,80) ;
+		Rect newListenerRect = new Rect(10,10,180,80);
+
 	void BasicUI()
 	{
 		// Container
 		GUI.Box(new Rect(0,0, position.width, 100), "");
 
 		// Button to add Object
-		if(GUI.Button(new Rect(10,10,180,80), "新增監聽器"))
+			if(GUI.Button(newListenerRect, newListenerBtn))
 		{
-			windows.Add(new ListenerComponent("新增監聽器", this));
+				windows.Add(new ListenerComponent(newListenerBtn, this));
 		}
 		// Button to add Event
-		else if(GUI.Button(new Rect(210,10,180,80), "新增事件"))
+			else if(GUI.Button(newEventRect, newEventBtn))
 		{
-			windows.Add(new EventComponent("新增事件", this));
+				windows.Add(new EventComponent(newEventBtn, this));
 		}
 		//Zoom slider
 		zoomScale = GUI.HorizontalSlider(new Rect(10,110,position.width-20, 20), zoomScale, 1.0f, 3.0f);
