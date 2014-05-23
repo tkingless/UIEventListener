@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace JTool.JListen
+namespace JUITool
 {
 public class EventHandler : MonoBehaviour {
 

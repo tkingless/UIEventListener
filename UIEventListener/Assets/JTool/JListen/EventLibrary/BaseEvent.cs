@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace JTool.JListen.EventLibrary
+namespace JUITool
 {
 public class BaseEvent {
 

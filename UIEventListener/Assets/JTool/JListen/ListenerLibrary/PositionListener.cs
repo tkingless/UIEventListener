@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Collections;
 
-namespace JTool.JListen.ListenerLibrary
+namespace JUITool
 {
 public class PositionListener : BaseListener {
 

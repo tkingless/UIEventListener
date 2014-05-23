@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Collections;
 
-namespace JTool.JUI
+namespace JUITool
 {
 public interface JInteractive3D
 {

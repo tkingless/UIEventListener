@@ -2,19 +2,18 @@
 using UnityEditor;
 using System.Reflection;
 using System.Collections;
-using JTool.Editor.Windows;
-using JTool.JListen.ListenerLibrary;
+using JUITool;
 
-namespace JTool.Editor.Component
+namespace JUITool
 {
-		public class ListenerComponent : BaseComponent
+		public class ListenerWnd : BaseWindow
 		{
 
 				BaseListener mListener;
 
 				//here to specify the size of rect and btn name, this level is tended to design the window appearance and loaded function
 
-				public ListenerComponent (string Name, EventEditorWindow win):base(Name, win)
+				public ListenerWnd (string Name, EventEditorWindow win):base(Name, win)
 				{
 						SetWndType (WindowType.tListner);
 						Rect initWndSize = new Rect (30, 200, 100, 120);
@@ -32,10 +31,10 @@ namespace JTool.Editor.Component
 						System.Type tt = System.Type.GetType ("JTool.JListen.ListenerLibrary.PositionListener");
 		
 						//Debug.Log(tt);
-//		System.Type tt = .GetType("JTool.JListen.ListenerLibrary.PositionListener");
-//		System.Object obj = Assembly.GetExecutingAssembly().GetType("PositionListener");
+						//System.Type tt = .GetType("JTool.JListen.ListenerLibrary.PositionListener");
+						//System.Object obj = Assembly.GetExecutingAssembly().GetType("PositionListener");
 
-//		Debug.Log(tt);
+						//Debug.Log(tt);
 
 						if (mListener != null)
 								mListener.OnGUI ();

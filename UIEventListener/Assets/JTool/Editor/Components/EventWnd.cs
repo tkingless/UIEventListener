@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using JTool.Editor.Windows;
+using JUITool;
 
-namespace JTool.Editor.Component
+namespace JUITool
 {
-public class EventComponent : BaseComponent {
+public class EventWnd : BaseWindow {
 	
 	//here to specify the size of rect and btn name, this level is tended to design the window appearance and loaded function
 	
-	public EventComponent(string Name, EventEditorWindow win):base(Name, win)
+	public EventWnd(string Name, EventEditorWindow win):base(Name, win)
 	{
 			SetWndType (WindowType.tEvent);
 			//here to specify the size of rect and btn name

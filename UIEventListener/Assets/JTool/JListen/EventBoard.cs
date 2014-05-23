@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System;
 using System.Diagnostics;
-using JTool.JListen.EventLibrary;
+using JUITool;
 
-namespace JTool.JListen
+namespace JUITool
 {
 public class EventBoard {
 	
