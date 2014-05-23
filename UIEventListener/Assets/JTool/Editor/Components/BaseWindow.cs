@@ -28,7 +28,13 @@ namespace JUITool
 
 				WindowProperty mWndProp = WindowProperty.none;
 
+				/// <summary>
+				/// The name of the window top bar
+				/// </summary>
 				public string mWndTitleName;
+				/// <summary>
+				/// The label for close button, suppose all windows has close button
+				/// </summary>
 				private string mCloseBtn = "Close";
 
 				public Rect mWndRect;
