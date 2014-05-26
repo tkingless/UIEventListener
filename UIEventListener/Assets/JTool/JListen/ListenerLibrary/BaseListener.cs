@@ -4,7 +4,14 @@ using System.Collections;
 
 namespace JUITool
 {
-public class BaseListener : Component{
+public class BaseListener{
+	public float Height = 100.0f;
+
+		public BaseListener()
+		{
+
+		}
+
 	public enum ListenType
 	{
 		Update, FixUpdate, Timer, Dispatch, SceneEnter, SceneLeave

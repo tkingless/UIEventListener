@@ -91,7 +91,7 @@ namespace JUITool
 						// Button to add Object
 						if (GUI.Button (newListenerRect, newListenerBtn)) {
 								//windows.Add(new ListenerWnd(newListenerBtn, this));
-								mOnScreenWindows.Add (new ConnectableWnd ("LinkWndL", this));
+								mOnScreenWindows.Add (new ListenerWnd ("LinkWndL", this));
 						}
 						// Button to add Event
 			else if (GUI.Button (newEventRect, newEventBtn)) {
