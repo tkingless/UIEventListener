@@ -7,7 +7,6 @@ namespace JUITool
 {
 		public class ConnectableWnd : BaseWindow,IConnectableWnd
 		{
-
 				private string mLinkBtn = "Link";
 				private string mDetachkBtn = "Break";
 				private Rect mLinkRect = new Rect (5, 45, 45, 20);
@@ -22,7 +21,7 @@ namespace JUITool
 						Rect initWndSize = new Rect (30, 250, 100, 100);
 						mWndRect = initWndSize;
 				}
-				
+
 				public override void OnGUI (int i)
 				{
 						if (GUI.Button (mLinkRect, mLinkBtn)) {
@@ -98,25 +97,25 @@ namespace JUITool
 
 				void AttachWindow (ConnectableWnd win1, ConnectableWnd win2)
 				{
-						if (win1 == this) {
-								if (!this.mConnectedWnd.Contains (win2))
-										this.mConnectedWnd.Add (win2);
-						} else if (win2 == this) {
-								if (!this.mConnectedWnd.Contains (win1))
-										this.mConnectedWnd.Add (win1);
-						}
-
+						//actually only win2's AttactWindow() and win2's DetachWindow() called, you may suppose to start from this=win2 case
+						if (!win2.mConnectedWnd.Contains (win1))
+								win2.mConnectedWnd.Add (win1);
+						if (!win1.mConnectedWnd.Contains (win2))
+								win1.mConnectedWnd.Add (win2);
 				}
 		
 				void DetachWindow (ConnectableWnd win1, ConnectableWnd win2)
 				{
-						if (win1 == this) {
-								if (this.mConnectedWnd.Contains (win2))
-										this.mConnectedWnd.Remove (win2);
-						} else if (win2 == this) {
-								if (this.mConnectedWnd.Contains (win1))
-										this.mConnectedWnd.Remove (win1);
-						}	
+						//since win2 always is the last clicked target wnd
+						//Debug.Log ("connectable wnd: DetachWindow() called");
+						//Debug.Log ("now win1 is : " + win1.mWndTitleName + " and win2 is: " + win2.mWndTitleName + " and this is: " + this.mWndTitleName);
+						if (win2.mConnectedWnd.Contains (win1)) {
+								if (win1.mConnectedWnd.Contains (win2)) {
+										win1.mConnectedWnd.Remove (win2);
+								}
+								win2.mConnectedWnd.Remove (win1);
+						}
+						mEditWndHdr.ClearNodeCurvePairs ();
 				}
 
 				public static void resetMeta ()

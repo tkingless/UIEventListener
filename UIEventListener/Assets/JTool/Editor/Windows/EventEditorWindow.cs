@@ -8,9 +8,6 @@ namespace JUITool
 {
 		public class EventEditorWindow : EditorWindow
 		{
-				public float zoomScale = 1;
-				public Vector2 scrollPos = Vector2.zero;
-
 				//should create a generic type of combination container for mNodeCurvePairs
 				//i.e. exclude same combination elements
 				struct ConnectPair
@@ -18,18 +15,22 @@ namespace JUITool
 						//no good for abstraction
 						public ConnectableWnd wndA;
 						public ConnectableWnd wndB;
-
+			
 						public ConnectPair (ConnectableWnd aWndA, ConnectableWnd aWndB)
 						{
 								wndA = aWndA;
 								wndB = aWndB;
 						}
-
+			
 						public ConnectPair GetReverse ()
 						{
 								return new ConnectPair (wndB, wndA);
 						}
+
+						//better consider an kind of acessor to automatically refresh, since it is linked to member: mOnScreenWindows
 				}
+				public float zoomScale = 1;
+				public Vector2 scrollPos = Vector2.zero;
 				private List<BaseWindow> mOnScreenWindows = new List<BaseWindow> ();
 				List<ConnectPair> mNodeCurvePairs = new List<ConnectPair> ();
 	
@@ -50,9 +51,9 @@ namespace JUITool
 						GUI.matrix = Translation * Scale * Translation.inverse;
 
 						#region Link
-			GetNodeCurvePairs ();
-			foreach(ConnectPair aPair in mNodeCurvePairs)
-				DrawNodeCurve(aPair.wndA.mWndRect,aPair.wndB.mWndRect);
+						GetNodeCurvePairs ();
+						foreach (ConnectPair aPair in mNodeCurvePairs)
+								DrawNodeCurve (aPair.wndA.mWndRect, aPair.wndB.mWndRect);
 						#endregion Link
 
 
@@ -92,7 +93,7 @@ namespace JUITool
 								//windows.Add(new ListenerWnd(newListenerBtn, this));
 								mOnScreenWindows.Add (new ConnectableWnd ("LinkWndL", this));
 						}
-		// Button to add Event
+						// Button to add Event
 			else if (GUI.Button (newEventRect, newEventBtn)) {
 								//windows.Add(new EventWnd(newEventBtn, this));
 								mOnScreenWindows.Add (new ConnectableWnd ("LinkWndE", this));
@@ -126,9 +127,10 @@ namespace JUITool
 						}
 				}
 
-				public void ClearNodeCurvePairs(){
-			mNodeCurvePairs.Clear ();
-		}
+				public void ClearNodeCurvePairs ()
+				{
+						mNodeCurvePairs.Clear ();
+				}
 
 				public List<BaseWindow> GetOnWindows ()
 				{
