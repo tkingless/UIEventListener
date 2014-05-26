@@ -24,7 +24,6 @@ namespace JUITool
 
 		public override void OnGUI (int i)
 		{
-			base.OnGUI (i);
 			Rect listenerRect = new Rect (5, 85, 90, 20);
 
 			mListenerScript = (MonoScript)EditorGUI.ObjectField (listenerRect, mListenerScript, typeof(MonoScript), false);
@@ -49,6 +48,7 @@ namespace JUITool
 			}
 			else
 				mWndRect.height= 120;
+			base.OnGUI (i);
 		}
 	}
 }

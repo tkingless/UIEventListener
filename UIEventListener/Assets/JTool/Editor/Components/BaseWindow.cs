@@ -47,7 +47,7 @@ namespace JUITool
 
 				public virtual void OnGUI (int i)
 				{
-			GUI.DragWindow ();
+
 						mTextRect = new Rect (5, 20, 90, 20);
 						mCloseRectnew = new Rect (5, 65, 90, 20);
 
@@ -56,7 +56,7 @@ namespace JUITool
 						if (GUI.Button (mCloseRectnew, mCloseBtn)) {
 								OnRemoveWindow ();
 						}
-
+					GUI.DragWindow ();
 				}
 
 				//acutally need to be rewritten
