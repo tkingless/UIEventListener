@@ -10,10 +10,28 @@ namespace JUITool
 		{
 				public float zoomScale = 1;
 				public Vector2 scrollPos = Vector2.zero;
+
+				//should create a generic type of combination container for mNodeCurvePairs
+				//i.e. exclude same combination elements
+				struct ConnectPair
+				{
+						//no good for abstraction
+						public ConnectableWnd wndA;
+						public ConnectableWnd wndB;
+
+						public ConnectPair (ConnectableWnd aWndA, ConnectableWnd aWndB)
+						{
+								wndA = aWndA;
+								wndB = aWndB;
+						}
+
+						public ConnectPair GetReverse ()
+						{
+								return new ConnectPair (wndB, wndA);
+						}
+				}
 				private List<BaseWindow> mOnScreenWindows = new List<BaseWindow> ();
-				List<BaseWindow> windowsToAttach = new List<BaseWindow> ();
-				List<BaseWindow> windowsToDettach = new List<BaseWindow> ();
-				List<BaseWindow> attachedWindows = new List<BaseWindow> ();
+				List<ConnectPair> mNodeCurvePairs = new List<ConnectPair> ();
 	
 				[MenuItem("JUI/Event Listener Editor")]
 				static void ShowEditor ()
@@ -32,15 +50,9 @@ namespace JUITool
 						GUI.matrix = Translation * Scale * Translation.inverse;
 
 						#region Link
-#if false
-		if (attachedWindows.Count >= 2)
-		{
-			for (int i = 0; i < attachedWindows.Count; i += 2)
-				DrawNodeCurve(attachedWindows[i].mWndRect, attachedWindows[i + 1].mWndRect);
-		}
-		//foreach(BaseComponent wta in windowsToAttach)
-			//wta.Attaching();
-#endif
+			GetNodeCurvePairs ();
+			foreach(ConnectPair aPair in mNodeCurvePairs)
+				DrawNodeCurve(aPair.wndA.mWndRect,aPair.wndB.mWndRect);
 						#endregion Link
 
 
@@ -78,11 +90,12 @@ namespace JUITool
 						// Button to add Object
 						if (GUI.Button (newListenerRect, newListenerBtn)) {
 								//windows.Add(new ListenerWnd(newListenerBtn, this));
-								mOnScreenWindows.Add (new ConnectableWnd ("LinkWnd", this));
+								mOnScreenWindows.Add (new ConnectableWnd ("LinkWndL", this));
 						}
 		// Button to add Event
 			else if (GUI.Button (newEventRect, newEventBtn)) {
 								//windows.Add(new EventWnd(newEventBtn, this));
+								mOnScreenWindows.Add (new ConnectableWnd ("LinkWndE", this));
 						}
 						//Zoom slider
 						zoomScale = GUI.HorizontalSlider (new Rect (10, 110, position.width - 20, 20), zoomScale, 1.0f, 3.0f);
@@ -98,61 +111,27 @@ namespace JUITool
 								Handles.DrawBezier (startPos, endPos, startPos, endPos, shadowCol, null, (i + 1) * 5);
 						Handles.DrawBezier (startPos, endPos, startPos, endPos, Color.black, null, 1);
 				}
-
-				public void AttachWindow (BaseWindow win)
+				
+				void GetNodeCurvePairs ()
 				{
-						if (windowsToAttach.Contains (win)) {
-								windowsToAttach.Remove (win);
-						} else {
-								windowsToAttach.Add (win);
-						}
-						if (windowsToAttach.Count == 2) {
-								attachedWindows.Add (windowsToAttach [0]);
-								attachedWindows.Add (windowsToAttach [1]);
-								windowsToAttach.Clear ();
-						}
-				}
-
-				/*public void OnRemoveWindow(BaseWindow win)
-	{
-		List<BaseWindow> attachRemoveList = new List<BaseWindow>();
-		for (int i = 0; i < attachedWindows.Count; i += 2)
-		{
-			if(attachedWindows[i] == win || attachedWindows[i+1] == win)
-			{
-				attachRemoveList.Add(attachedWindows[i]);
-				attachRemoveList.Add(attachedWindows[i+1]);
-			}
-		}
-
-		foreach(BaseWindow at in attachRemoveList)	
-			attachedWindows.Remove(at);
-		mOnScreenWindows.Remove(win);
-	}*/
-
-				public void DettachWindow (BaseWindow win)
-				{
-						if (windowsToDettach.Contains (win)) {
-								windowsToDettach.Remove (win);
-						} else {
-								windowsToDettach.Add (win);
-						}
-
-						if (windowsToDettach.Count == 2) {
-								for (int i = 0; i < attachedWindows.Count; i += 2) {
-										if (attachedWindows [i] == windowsToDettach [0] || attachedWindows [i] == windowsToDettach [1]) {
-												if (attachedWindows [i + 1] == windowsToDettach [0] || attachedWindows [i + 1] == windowsToDettach [1]) {
-														attachedWindows.RemoveRange (i, 2);
-												}
+						//really awful for this temporary function
+						foreach (ConnectableWnd aWindow in mOnScreenWindows) {
+								foreach (ConnectableWnd aFrd in aWindow.mConnectedWnd) {
+										ConnectPair temp = new ConnectPair (aWindow, aFrd);
+										ConnectPair temp2 = temp.GetReverse ();
+										if (!mNodeCurvePairs.Contains (temp) && !mNodeCurvePairs.Contains (temp2)) {
+												mNodeCurvePairs.Add (temp);
 										}
 								}
-								windowsToDettach.Clear ();
 						}
 				}
+
+				public void ClearNodeCurvePairs(){
+			mNodeCurvePairs.Clear ();
+		}
 
 				public List<BaseWindow> GetOnWindows ()
 				{
-
 						return this.mOnScreenWindows;
 				}
 		}
