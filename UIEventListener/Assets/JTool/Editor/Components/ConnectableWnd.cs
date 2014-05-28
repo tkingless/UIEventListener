@@ -115,7 +115,7 @@ namespace JUITool
 								}
 								win2.mConnectedWnd.Remove (win1);
 						}
-						mEditWndHdr.ClearNodeCurvePairs ();
+						//mEditWndHdr.ClearNodeCurvePairs ();
 				}
 
 				public static void resetMeta ()

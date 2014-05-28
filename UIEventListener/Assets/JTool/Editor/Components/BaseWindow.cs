@@ -82,7 +82,7 @@ namespace JUITool
 								Debug.Log ("resetMeta() called due to closing meta window");
 						}
 						//this is not good practice EventEditorWindow thing hooked here
-						mEditWndHdr.ClearNodeCurvePairs ();
+						//mEditWndHdr.ClearNodeCurvePairs ();
 
 				}
 

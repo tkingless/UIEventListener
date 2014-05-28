@@ -10,7 +10,7 @@ namespace JUITool
 		{
 				//should create a generic type of combination container for mNodeCurvePairs
 				//i.e. exclude same combination elements
-				struct ConnectPair
+				/*struct ConnectPair
 				{
 						//no good for abstraction
 						public ConnectableWnd wndA;
@@ -28,11 +28,11 @@ namespace JUITool
 						}
 
 						//better consider an kind of acessor to automatically refresh, since it is linked to member: mOnScreenWindows
-				}
+				}*/
 				public float zoomScale = 1;
 				public Vector2 scrollPos = Vector2.zero;
 				private List<BaseWindow> mOnScreenWindows = new List<BaseWindow> ();
-				List<ConnectPair> mNodeCurvePairs = new List<ConnectPair> ();
+				//List<ConnectPair> mNodeCurvePairs = new List<ConnectPair> ();
 	
 				[MenuItem("JUI/Event Listener Editor")]
 				static void ShowEditor ()
@@ -51,9 +51,9 @@ namespace JUITool
 						GUI.matrix = Translation * Scale * Translation.inverse;
 
 						#region Link
-						GetNodeCurvePairs ();
+						/*GetNodeCurvePairs ();
 						foreach (ConnectPair aPair in mNodeCurvePairs)
-								DrawNodeCurve (aPair.wndA.mWndRect, aPair.wndB.mWndRect);
+								DrawNodeCurve (aPair.wndA.mWndRect, aPair.wndB.mWndRect);*/
 						#endregion Link
 
 
@@ -113,7 +113,7 @@ namespace JUITool
 						Handles.DrawBezier (startPos, endPos, startPos, endPos, Color.black, null, 1);
 				}
 				
-				void GetNodeCurvePairs ()
+				/*void GetNodeCurvePairs ()
 				{
 						//really awful for this temporary function
 						foreach (ConnectableWnd aWindow in mOnScreenWindows) {
@@ -130,7 +130,7 @@ namespace JUITool
 				public void ClearNodeCurvePairs ()
 				{
 						mNodeCurvePairs.Clear ();
-				}
+				}*/
 
 				public List<BaseWindow> GetOnWindows ()
 				{
