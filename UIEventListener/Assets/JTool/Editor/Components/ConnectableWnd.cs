@@ -7,7 +7,16 @@ namespace JUITool
 {
 		public class ConnectableWnd : BaseWindow,IConnectableWnd
 		{
-				private string mLinkBtn = "Link";
+		private string mLinkBtn = "Link";
+
+		public string linkBtn{
+
+			get{
+				return mLinkBtn;
+			}
+			set{}
+		}
+				
 				private string mDetachkBtn = "Break";
 				private Rect mLinkRect = new Rect (5, 45, 45, 20);
 				private Rect mDetachRect = new Rect (50, 45, 45, 20);
@@ -116,6 +125,16 @@ namespace JUITool
 								win2.mConnectedWnd.Remove (win1);
 						}
 						//mEditWndHdr.ClearNodeCurvePairs ();
+				}
+
+		delegate void OnLinkDelegate ();
+
+		event OnLinkDelegate OnLinkEvent;
+
+		public void linkAction() {
+				}
+
+		public void delinkAction(){
 				}
 
 				public static void resetMeta ()

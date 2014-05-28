@@ -54,13 +54,17 @@ namespace JUITool
 						mWndTitleName = GUI.TextArea (mTextRect, mWndTitleName);
 
 						if (GUI.Button (mCloseRectnew, mCloseBtn)) {
-								OnRemoveWindow ();
+								RemoveWindow ();
 						}
 					GUI.DragWindow ();
 				}
 
+		delegate void OnRemoveWindowDelegate();
+
+		event OnRemoveWindowDelegate OnRemoveEvent;
+				
 				//acutally need to be rewritten
-				public void OnRemoveWindow ()
+				public void RemoveWindow ()
 				{
 						if (this.GetType () == typeof(JUITool.ConnectableWnd)) {
 				//this loop is no good to be here
