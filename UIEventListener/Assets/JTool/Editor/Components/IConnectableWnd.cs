@@ -7,7 +7,7 @@ namespace JUITool
 		public interface IConnectableWnd
 		{
 
-				string linkBtn { get; set; }
+				string LinkBtn { get; set; }
 
 				//string delinkBtn { get; set; }
 

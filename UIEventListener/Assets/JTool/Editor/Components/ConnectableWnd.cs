@@ -9,7 +9,7 @@ namespace JUITool
 		{
 		private string mLinkBtn = "Link";
 
-		public string linkBtn{
+		public string LinkBtn{
 
 			get{
 				return mLinkBtn;
@@ -26,34 +26,20 @@ namespace JUITool
 						//may consider property getter, setter
 						if (GetWndProp () != WindowProperty.none)
 								SetWndProp (WindowProperty.connectable);
-						//here to specify the size of rect and btn name
-						Rect initWndSize = new Rect (30, 250, 100, 100);
-						mWndRect = initWndSize;
+					OnRemoveEvent += new OnRemoveWindowDelegate(RemoveConnectedWnd);
 				}
 
 				public override void OnGUI (int i)
 				{
 						if (GUI.Button (mLinkRect, mLinkBtn)) {
-								//mEditWndHdr.AttachWindow (this);
 								PairingWndProc (this, PairingProc.link);
 								
 						} else if (GUI.Button (mDetachRect, mDetachkBtn)) {
-								//mEditWndHdr.DettachWindow (this);
 								PairingWndProc (this, PairingProc.detach);
 						}
 						base.OnGUI (i);
 				}
-
-				//unknown for use, but guessing should put in connectableWnd class
-				/*public void Attaching() //it should not be declared in the class, if suppose not all windows are connectable
-	{
-		Color origin = GUI.color;
-		GUI.color = Color.red;
-		GUI.Box(new Rect(mWndRect.x, mWndRect.y, 100,15), "");
-		GUI.color = origin;
-	}*/ 
-
-		#region AI handling clicking link and break btn
+	
 				//Welcome to devise better algorithm, maybe using delegates or etc.
 				public List<ConnectableWnd> mConnectedWnd = new List<ConnectableWnd> ();
 				public static ConnectableWnd mPairWnd1;
@@ -124,12 +110,12 @@ namespace JUITool
 								}
 								win2.mConnectedWnd.Remove (win1);
 						}
-						//mEditWndHdr.ClearNodeCurvePairs ();
+						mEditWndHdr.ClearNodeCurvePairs ();
 				}
 
-		delegate void OnLinkDelegate ();
+		public delegate void OnLinkDelegate ();
 
-		event OnLinkDelegate OnLinkEvent;
+		public event OnLinkDelegate OnLinkEvent;
 
 		public void linkAction() {
 				}
@@ -144,7 +130,23 @@ namespace JUITool
 						mPairWnd2 = null;
 						proc = PairingProc.none;
 				}
-		#endregion
-				//may consider put the connectable window interface here as well
+
+		//========================================================================
+		void RemoveConnectedWnd () {
+
+			foreach (ConnectableWnd frd in mConnectedWnd)
+				frd.mConnectedWnd.Remove ((ConnectableWnd)this);
+
+			if (ConnectableWnd.mPairWnd1 == this) {
+				ConnectableWnd.resetMeta ();
+			}
 		}
+		//========================================================================
+
+		}
+
+	class ConnectableWndContainer {
+
+		List<ConnectableWnd> mList = new List<ConnectableWnd>();
+	}
 }

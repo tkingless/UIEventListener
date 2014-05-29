@@ -39,10 +39,18 @@ namespace JUITool
 				private Rect mCloseRectnew;
 				public EventEditorWindow mEditWndHdr;
 
+				public delegate void OnRemoveWindowDelegate ();
+
+				public event OnRemoveWindowDelegate OnRemoveEvent;
+
 				public BaseWindow (string aName, EventEditorWindow win)
 				{
+						//here to specify the size of rect
+						Rect initWndSize = new Rect (30, 250, 100, 100);
+						mWndRect = initWndSize;
 						this.mWndTitleName = aName;
 						this.mEditWndHdr = win;
+						OnRemoveEvent += new OnRemoveWindowDelegate (RemoveWindow);
 				}
 
 				public virtual void OnGUI (int i)
@@ -54,25 +62,26 @@ namespace JUITool
 						mWndTitleName = GUI.TextArea (mTextRect, mWndTitleName);
 
 						if (GUI.Button (mCloseRectnew, mCloseBtn)) {
-								RemoveWindow ();
+								//RemoveWindow ();
+								DispatchRemoveEvent ();
 						}
-					GUI.DragWindow ();
+						GUI.DragWindow ();
 				}
 
-		delegate void OnRemoveWindowDelegate();
+				//===================================================================================================
 
-		event OnRemoveWindowDelegate OnRemoveEvent;
+				//this maybe made more universial like:
+				//Dispatch(EventType)
+				void DispatchRemoveEvent ()
+				{
+
+						if (OnRemoveEvent != null)
+								OnRemoveEvent ();
+				}
 				
 				//acutally need to be rewritten
 				public void RemoveWindow ()
 				{
-						if (this.GetType () == typeof(JUITool.ConnectableWnd)) {
-				//this loop is no good to be here
-								ConnectableWnd temp = (ConnectableWnd)this;
-								foreach (ConnectableWnd frd in temp.mConnectedWnd)
-										frd.mConnectedWnd.Remove ((ConnectableWnd)this);
-
-						}
 						if (mEditWndHdr != null) {
 								if (mEditWndHdr.GetOnWindows ().Contains (this))
 										mEditWndHdr.GetOnWindows ().Remove (this);
@@ -80,16 +89,12 @@ namespace JUITool
 						} else
 								Debug.Log ("Error, mEditWndHdr is null!!");
 
-						if (ConnectableWnd.mPairWnd1 == this) {
-								//this is not a good practice putting ConnectableWnd things here.
-								ConnectableWnd.resetMeta ();
-								Debug.Log ("resetMeta() called due to closing meta window");
-						}
 						//this is not good practice EventEditorWindow thing hooked here
-						//mEditWndHdr.ClearNodeCurvePairs ();
+						mEditWndHdr.ClearNodeCurvePairs ();
 
 				}
 
+				//========================================================================
 				public void SetWndType (BaseWindow.WindowType wndType)
 				{
 						this.mWndType = wndType;
@@ -104,6 +109,7 @@ namespace JUITool
 				{
 						return this.mWndProp;
 				}
+				//=============================================================================
 	
 		}
 }
