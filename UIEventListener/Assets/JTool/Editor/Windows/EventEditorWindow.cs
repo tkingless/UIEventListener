@@ -43,9 +43,7 @@ namespace JUITool
 						}
 						EndWindows ();
 						#endregion window
-
 						GUI.matrix = before;
-
 						#endregion Recuse the Matrix
 
 						GUI.EndScrollView ();

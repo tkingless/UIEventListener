@@ -37,9 +37,9 @@ namespace JUITool
 				public Rect mWndRect;
 				private Rect mTextRect;
 				private Rect mCloseRectnew;
-				public EventEditorWindow mEditWndHdr;
+				//public EventEditorWindow mEditWndHdr;
 
-				public delegate void OnRemoveWindowDelegate ();
+				public delegate void OnRemoveWindowDelegate (BaseWindow rmWnd);
 
 				public event OnRemoveWindowDelegate OnRemoveEvent;
 
@@ -49,8 +49,6 @@ namespace JUITool
 						Rect initWndSize = new Rect (30, 250, 100, 100);
 						mWndRect = initWndSize;
 						this.mWndTitleName = aName;
-						this.mEditWndHdr = win;
-						OnRemoveEvent += new OnRemoveWindowDelegate (RemoveWindow);
 				}
 
 				public virtual void OnGUI (int i)
@@ -76,22 +74,7 @@ namespace JUITool
 				{
 
 						if (OnRemoveEvent != null)
-								OnRemoveEvent ();
-				}
-				
-				//acutally need to be rewritten
-				public void RemoveWindow ()
-				{
-						if (mEditWndHdr != null) {
-								if (mEditWndHdr.GetOnWindows ().Contains (this))
-										mEditWndHdr.GetOnWindows ().Remove (this);
-
-						} else
-								Debug.Log ("Error, mEditWndHdr is null!!");
-
-						//this is not good practice EventEditorWindow thing hooked here
-						mEditWndHdr.ClearNodeCurvePairs ();
-
+								OnRemoveEvent (this);
 				}
 
 				//========================================================================
