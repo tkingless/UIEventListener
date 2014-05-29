@@ -8,31 +8,10 @@ namespace JUITool
 {
 		public class EventEditorWindow : EditorWindow
 		{
-				//should create a generic type of combination container for mNodeCurvePairs
-				//i.e. exclude same combination elements
-				struct ConnectPair
-				{
-						//no good for abstraction
-						public ConnectableWnd wndA;
-						public ConnectableWnd wndB;
-			
-						public ConnectPair (ConnectableWnd aWndA, ConnectableWnd aWndB)
-						{
-								wndA = aWndA;
-								wndB = aWndB;
-						}
-			
-						public ConnectPair GetReverse ()
-						{
-								return new ConnectPair (wndB, wndA);
-						}
-
-						//better consider an kind of acessor to automatically refresh, since it is linked to member: mOnScreenWindows
-				}
+				
 				public float zoomScale = 1;
 				public Vector2 scrollPos = Vector2.zero;
-				private List<BaseWindow> mOnScreenWindows = new List<BaseWindow> ();
-				List<ConnectPair> mNodeCurvePairs = new List<ConnectPair> ();
+				private WndContainer mWnds = new WndContainer ();
 	
 				[MenuItem("JUI/Event Listener Editor")]
 				static void ShowEditor ()
@@ -51,19 +30,17 @@ namespace JUITool
 						GUI.matrix = Translation * Scale * Translation.inverse;
 
 						#region Link
-						GetNodeCurvePairs ();
-						foreach (ConnectPair aPair in mNodeCurvePairs)
+						foreach (WndContainer.ConnectPair aPair in mWnds.GetConnectPair())
 								DrawNodeCurve (aPair.wndA.mWndRect, aPair.wndB.mWndRect);
 						#endregion Link
 
 
 						#region window
 						BeginWindows ();
-
-						for (int i = 0; i < mOnScreenWindows.Count; i++) {
-								mOnScreenWindows [i].mWndRect = GUI.Window (i, mOnScreenWindows [i].mWndRect, mOnScreenWindows [i].OnGUI, mOnScreenWindows [i].mWndTitleName);
+						List<BaseWindow> temp = mWnds.GetWnds ();
+						for (int i = 0; i < temp.Count; i++) {
+								temp [i].mWndRect = GUI.Window (i, temp [i].mWndRect, temp [i].OnGUI, temp [i].mWndTitleName);
 						}
-		
 						EndWindows ();
 						#endregion window
 
@@ -91,12 +68,12 @@ namespace JUITool
 						// Button to add Object
 						if (GUI.Button (newListenerRect, newListenerBtn)) {
 								//windows.Add(new ListenerWnd(newListenerBtn, this));
-								mOnScreenWindows.Add (new ListenerWnd ("LinkWndL", this));
+								mWnds.Add (new ListenerWnd ("LinkWndL", this));
 						}
 						// Button to add Event
-			else if (GUI.Button (newEventRect, newEventBtn)) {
+						else if (GUI.Button (newEventRect, newEventBtn)) {
 								//windows.Add(new EventWnd(newEventBtn, this));
-								mOnScreenWindows.Add (new ConnectableWnd ("LinkWndE", this));
+								mWnds.Add (new ConnectableWnd ("LinkWndE", this));
 						}
 						//Zoom slider
 						zoomScale = GUI.HorizontalSlider (new Rect (10, 110, position.width - 20, 20), zoomScale, 1.0f, 3.0f);
@@ -111,30 +88,6 @@ namespace JUITool
 						for (int i = 0; i < 3; i++)
 								Handles.DrawBezier (startPos, endPos, startPos, endPos, shadowCol, null, (i + 1) * 5);
 						Handles.DrawBezier (startPos, endPos, startPos, endPos, Color.black, null, 1);
-				}
-				
-				void GetNodeCurvePairs ()
-				{
-						//really awful for this temporary function
-						foreach (ConnectableWnd aWindow in mOnScreenWindows) {
-								foreach (ConnectableWnd aFrd in aWindow.mConnectedWnd) {
-										ConnectPair temp = new ConnectPair (aWindow, aFrd);
-										ConnectPair temp2 = temp.GetReverse ();
-										if (!mNodeCurvePairs.Contains (temp) && !mNodeCurvePairs.Contains (temp2)) {
-												mNodeCurvePairs.Add (temp);
-										}
-								}
-						}
-				}
-
-				public void ClearNodeCurvePairs ()
-				{
-						mNodeCurvePairs.Clear ();
-				}
-
-				public List<BaseWindow> GetOnWindows ()
-				{
-						return this.mOnScreenWindows;
 				}
 		}
 }

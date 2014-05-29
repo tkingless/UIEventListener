@@ -26,7 +26,11 @@ namespace JUITool
 						//may consider property getter, setter
 						if (GetWndProp () != WindowProperty.none)
 								SetWndProp (WindowProperty.connectable);
+
 					OnRemoveEvent += new OnRemoveWindowDelegate(RemoveConnectedWnd);
+			OnLinkEvent += new OnLinkDelegate (linkAction);
+			OnDelinkEvent += new OnDelinkDelegate (delinkAction);
+
 				}
 
 				public override void OnGUI (int i)
@@ -74,11 +78,13 @@ namespace JUITool
 										} else {
 												switch (proc) {
 												case PairingProc.link:
-														AttachWindow (mPairWnd1, mPairWnd2);
+							OnLinkEvent();
+														//AttachWindow (mPairWnd1, mPairWnd2);
 														resetMeta ();
 														break;
 												case PairingProc.detach:
-														DetachWindow (mPairWnd1, mPairWnd2);
+							OnDelinkEvent();
+														//DetachWindow (mPairWnd1, mPairWnd2);
 														resetMeta ();
 														break;
 												default:
@@ -90,37 +96,27 @@ namespace JUITool
 						}
 				}
 
-				void AttachWindow (ConnectableWnd win1, ConnectableWnd win2)
-				{
-						//actually only win2's AttactWindow() and win2's DetachWindow() called, you may suppose to start from this=win2 case
-						if (!win2.mConnectedWnd.Contains (win1))
-								win2.mConnectedWnd.Add (win1);
-						if (!win1.mConnectedWnd.Contains (win2))
-								win1.mConnectedWnd.Add (win2);
-				}
-		
-				void DetachWindow (ConnectableWnd win1, ConnectableWnd win2)
-				{
-						//since win2 always is the last clicked target wnd
-						//Debug.Log ("connectable wnd: DetachWindow() called");
-						//Debug.Log ("now win1 is : " + win1.mWndTitleName + " and win2 is: " + win2.mWndTitleName + " and this is: " + this.mWndTitleName);
-						if (win2.mConnectedWnd.Contains (win1)) {
-								if (win1.mConnectedWnd.Contains (win2)) {
-										win1.mConnectedWnd.Remove (win2);
-								}
-								win2.mConnectedWnd.Remove (win1);
-						}
-						mEditWndHdr.ClearNodeCurvePairs ();
-				}
-
 		public delegate void OnLinkDelegate ();
-
+		public delegate void OnDelinkDelegate ();
 		public event OnLinkDelegate OnLinkEvent;
+		public event OnDelinkDelegate OnDelinkEvent;
 
 		public void linkAction() {
+			//actually only win2's AttactWindow() and win2's DetachWindow() called, you may suppose to start from this=win2 case
+			if (!mPairWnd2.mConnectedWnd.Contains (mPairWnd1))
+				mPairWnd2.mConnectedWnd.Add (mPairWnd1);
+			if (!mPairWnd1.mConnectedWnd.Contains (mPairWnd2))
+				mPairWnd1.mConnectedWnd.Add (mPairWnd2);
 				}
 
 		public void delinkAction(){
+			//since win2 always is the last clicked target wnd
+			if (mPairWnd2.mConnectedWnd.Contains (mPairWnd1)) {
+				if (mPairWnd1.mConnectedWnd.Contains (mPairWnd2)) {
+					mPairWnd1.mConnectedWnd.Remove (mPairWnd2);
+				}
+				mPairWnd2.mConnectedWnd.Remove (mPairWnd1);
+			}
 				}
 
 				public static void resetMeta ()
@@ -132,7 +128,7 @@ namespace JUITool
 				}
 
 		//========================================================================
-		void RemoveConnectedWnd () {
+		void RemoveConnectedWnd (BaseWindow rmWnd) {
 
 			foreach (ConnectableWnd frd in mConnectedWnd)
 				frd.mConnectedWnd.Remove ((ConnectableWnd)this);
@@ -144,9 +140,84 @@ namespace JUITool
 		//========================================================================
 
 		}
+	
 
-	class ConnectableWndContainer {
+	public class WndContainer {
 
-		List<ConnectableWnd> mList = new List<ConnectableWnd>();
+		private List<BaseWindow> mList = new List<BaseWindow>();
+
+		//should create a generic type of combination container for mNodeCurvePairs
+		//i.e. exclude same combination elements
+		public struct ConnectPair
+		{
+			//no good for abstraction
+			public ConnectableWnd wndA;
+			public ConnectableWnd wndB;
+			
+			public ConnectPair (ConnectableWnd aWndA, ConnectableWnd aWndB)
+			{
+				wndA = aWndA;
+				wndB = aWndB;
+			}
+			
+			public ConnectPair GetReverse ()
+			{
+				return new ConnectPair (wndB, wndA);
+			}
+			
+			//better consider an kind of acessor to automatically refresh, since it is linked to member: mOnScreenWindows
+		}
+
+		List<ConnectPair> mNodeCurvePairs = new List<ConnectPair> ();
+
+		public List<BaseWindow> GetWnds () {
+						return mList;
+				}
+
+		public List<ConnectPair> GetConnectPair() {
+						return mNodeCurvePairs;
+				}
+
+		public void Add( BaseWindow aWnd){
+			mList.Add(aWnd);
+			aWnd.OnRemoveEvent += new BaseWindow.OnRemoveWindowDelegate (Remove);
+
+			if (aWnd.GetType () == typeof(JUITool.ConnectableWnd)) {
+				ConnectableWnd temp = (ConnectableWnd)aWnd;
+				temp.OnLinkEvent += GetNodeCurvePairs;
+				temp.OnDelinkEvent += RegetNodeCurvePairs;
+						}
+		}
+
+		public void Remove (BaseWindow aWnd) {
+
+			if (mList.Contains (aWnd)){
+				mList.Remove(aWnd);	
+			} else
+				Debug.Log ("Error, mList doesnt contain this base window!!");
+
+			if (aWnd.GetType () == typeof(JUITool.ConnectableWnd))
+				RegetNodeCurvePairs();
+		}
+
+		public void GetNodeCurvePairs ()
+		{
+			//really awful for this temporary function
+			foreach (ConnectableWnd aWindow in mList) {
+				foreach (ConnectableWnd aFrd in aWindow.mConnectedWnd) {
+					ConnectPair temp = new ConnectPair (aWindow, aFrd);
+					ConnectPair temp2 = temp.GetReverse ();
+					if (!mNodeCurvePairs.Contains (temp) && !mNodeCurvePairs.Contains (temp2)) {
+						mNodeCurvePairs.Add (temp);
+					}
+				}
+			}
+		}
+
+		void RegetNodeCurvePairs ()
+		{
+			mNodeCurvePairs.Clear ();
+			GetNodeCurvePairs ();
+		}
 	}
 }
