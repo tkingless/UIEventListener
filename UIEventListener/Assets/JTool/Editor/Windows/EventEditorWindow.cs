@@ -8,7 +8,13 @@ namespace JUITool
 {
 		public class EventEditorWindow : EditorWindow
 		{
-				
+		EventHandler handler;
+
+		public void Init()
+		{
+			handler = (EventHandler)FindObjectOfType(typeof(EventHandler));
+		}
+
 				public float zoomScale = 1;
 				public Vector2 scrollPos = Vector2.zero;
 				private WndContainer mWnds = new WndContainer ();
